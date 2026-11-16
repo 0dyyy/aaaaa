@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1910" height="1400" viewBox="0 0 1910 1400" font-family="Segoe UI, Arial, sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<g transform="translate(30,0)">
+<line x1="900" y1="270" x2="610.2" y2="220.8" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="270" x2="687.9" y2="135.6" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="270" x2="822.4" y2="86.5" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="270" x2="977.6" y2="86.5" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="270" x2="1112.1" y2="135.6" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="270" x2="1189.8" y2="220.8" stroke="#222" stroke-width="1.6"/>
+<line x1="380" y1="700" x2="455.0" y2="465.0" stroke="#222" stroke-width="1.6"/>
+<line x1="380" y1="700" x2="280.0" y2="440.0" stroke="#222" stroke-width="1.6"/>
+<line x1="380" y1="700" x2="130.0" y2="560.0" stroke="#222" stroke-width="1.6"/>
+<line x1="380" y1="700" x2="110.0" y2="720.0" stroke="#222" stroke-width="1.6"/>
+<line x1="380" y1="700" x2="175.0" y2="880.0" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="700" x2="1329.4" y2="465.1" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="700" x2="1475.1" y2="455.5" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="700" x2="1604.1" y2="520.2" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="700" x2="1677.1" y2="639.5" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="700" x2="1672.0" y2="777.3" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="700" x2="1590.3" y2="891.5" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="700" x2="1185.0" y2="765.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="700" x2="1170.0" y2="850.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="700" x2="1085.0" y2="930.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="700" x2="1000.0" y2="990.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="700" x2="800.0" y2="990.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="700" x2="710.0" y2="930.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="700" x2="630.0" y2="850.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900" y1="700" x2="615.0" y2="765.0" stroke="#222" stroke-width="1.6"/>
+<line x1="380" y1="1150" x2="180.8" y2="1200.0" stroke="#222" stroke-width="1.6"/>
+<line x1="380" y1="1150" x2="579.2" y2="1200.0" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="1150" x2="1685.9" y2="1118.7" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="1150" x2="1626.8" y2="1265.7" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="1150" x2="1420.0" y2="1330.0" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="1150" x2="1213.2" y2="1265.7" stroke="#222" stroke-width="1.6"/>
+<line x1="1420" y1="1150" x2="1154.1" y2="1118.7" stroke="#222" stroke-width="1.6"/>
+<polyline points="900,270 640,485 380,700" fill="none" stroke="#222" stroke-width="1.6"/>
+<polyline points="900,270 900,485 900,700" fill="none" stroke="#222" stroke-width="1.6"/>
+<polyline points="900,270 1160,485 1420,700" fill="none" stroke="#222" stroke-width="1.6"/>
+<polyline points="380,700 380,925 380,1150" fill="none" stroke="#222" stroke-width="1.6"/>
+<polyline points="1420,1150 1420,925 1420,700" fill="none" stroke="#222" stroke-width="1.6"/>
+<ellipse cx="610.2" cy="220.8" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="610.2" y="225.3" font-size="13" text-anchor="middle" fill="#1a1a1a" font-weight="700" text-decoration="underline">ID</text>
+<ellipse cx="687.9" cy="135.6" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="687.9" y="140.1" font-size="13" text-anchor="middle" fill="#1a1a1a">Name</text>
+<ellipse cx="822.4" cy="86.5" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="822.4" y="91.0" font-size="13" text-anchor="middle" fill="#1a1a1a">Email</text>
+<ellipse cx="977.6" cy="86.5" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="977.6" y="91.0" font-size="13" text-anchor="middle" fill="#1a1a1a">Password</text>
+<ellipse cx="1112.1" cy="135.6" rx="60.699999999999996" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1112.1" y="140.1" font-size="13" text-anchor="middle" fill="#1a1a1a">Weight Kg</text>
+<ellipse cx="1189.8" cy="220.8" rx="60.699999999999996" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1189.8" y="225.3" font-size="13" text-anchor="middle" fill="#1a1a1a">Height Cm</text>
+<ellipse cx="455.0" cy="465.0" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="455.0" y="469.5" font-size="13" text-anchor="middle" fill="#1a1a1a" font-weight="700" text-decoration="underline">ID</text>
+<ellipse cx="280.0" cy="440.0" rx="60.699999999999996" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="280.0" y="444.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Food Name</text>
+<ellipse cx="130.0" cy="560.0" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="130.0" y="564.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Calories</text>
+<ellipse cx="110.0" cy="720.0" rx="95.1" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="110.0" y="724.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Nutrition Details</text>
+<ellipse cx="175.0" cy="880.0" rx="69.3" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="175.0" y="884.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Consumed At</text>
+<ellipse cx="1329.4" cy="465.1" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1329.4" y="469.6" font-size="13" text-anchor="middle" fill="#1a1a1a" font-weight="700" text-decoration="underline">ID</text>
+<ellipse cx="1475.1" cy="455.5" rx="77.9" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1475.1" y="460.0" font-size="13" text-anchor="middle" fill="#1a1a1a">Exercise Type</text>
+<ellipse cx="1604.1" cy="520.2" rx="90.8" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1604.1" y="524.7" font-size="13" text-anchor="middle" fill="#1a1a1a">Duration Minutes</text>
+<ellipse cx="1677.1" cy="639.5" rx="86.5" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1677.1" y="644.0" font-size="13" text-anchor="middle" fill="#1a1a1a">Calories Burned</text>
+<ellipse cx="1672.0" cy="777.3" rx="138.1" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1672.0" y="781.8" font-size="13" text-anchor="middle" fill="#1a1a1a">Air Quality During Exercise</text>
+<ellipse cx="1590.3" cy="891.5" rx="73.6" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1590.3" y="896.0" font-size="13" text-anchor="middle" fill="#1a1a1a">Exercised At</text>
+<ellipse cx="1185.0" cy="765.0" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1185.0" y="769.5" font-size="13" text-anchor="middle" fill="#1a1a1a" font-weight="700" text-decoration="underline">ID</text>
+<ellipse cx="1170.0" cy="850.0" rx="65" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1170.0" y="854.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Score Date</text>
+<ellipse cx="1085.0" cy="930.0" rx="69.3" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1085.0" y="934.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Total Score</text>
+<ellipse cx="1000.0" cy="990.0" rx="86.5" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1000.0" y="994.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Nutrition Score</text>
+<ellipse cx="800.0" cy="990.0" rx="82.19999999999999" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="800.0" y="994.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Activity Score</text>
+<ellipse cx="710.0" cy="930.0" rx="69.3" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="710.0" y="934.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Calories In</text>
+<ellipse cx="630.0" cy="850.0" rx="86.5" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="630.0" y="854.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Calories Burned</text>
+<ellipse cx="615.0" cy="765.0" rx="65" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="615.0" y="769.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Ai Insight</text>
+<ellipse cx="180.8" cy="1200.0" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="180.8" y="1204.5" font-size="13" text-anchor="middle" fill="#1a1a1a" font-weight="700" text-decoration="underline">ID</text>
+<ellipse cx="579.2" cy="1200.0" rx="65" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="579.2" y="1204.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Photo Path</text>
+<ellipse cx="1685.9" cy="1118.7" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1685.9" y="1123.2" font-size="13" text-anchor="middle" fill="#1a1a1a" font-weight="700" text-decoration="underline">ID</text>
+<ellipse cx="1626.8" cy="1265.7" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1626.8" y="1270.2" font-size="13" text-anchor="middle" fill="#1a1a1a">Name</text>
+<ellipse cx="1420.0" cy="1330.0" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1420.0" y="1334.5" font-size="13" text-anchor="middle" fill="#1a1a1a">Address</text>
+<ellipse cx="1213.2" cy="1265.7" rx="58" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1213.2" y="1270.2" font-size="13" text-anchor="middle" fill="#1a1a1a">Latitude</text>
+<ellipse cx="1154.1" cy="1118.7" rx="60.699999999999996" ry="23" fill="#f4845f" stroke="#c4593a" stroke-width="1.2"/>
+<text x="1154.1" y="1123.2" font-size="13" text-anchor="middle" fill="#1a1a1a">Longitude</text>
+<line x1="864.2" y1="311.3" x2="852.7" y2="297.4" stroke="#222" stroke-width="1.6"/>
+<line x1="858.8" y1="315.8" x2="847.3" y2="301.9" stroke="#222" stroke-width="1.6"/>
+<line x1="425.4" y1="662.4" x2="407.5" y2="664.3" stroke="#222" stroke-width="1.6"/>
+<line x1="425.4" y1="662.4" x2="420.2" y2="679.7" stroke="#222" stroke-width="1.6"/>
+<line x1="425.4" y1="662.4" x2="413.9" y2="672.0" stroke="#222" stroke-width="1.6"/>
+<circle cx="430.8" cy="658.0" r="5.5" fill="#fff" stroke="#222" stroke-width="1.6"/>
+<polygon points="640,453 715,485 640,517 565,485" fill="#5b8def" stroke="#2f5fb8" stroke-width="1.4"/>
+<text x="640" y="490" font-size="14" text-anchor="middle" fill="#0f1b33">Mencatat</text>
+<line x1="909.0" y1="308.0" x2="891.0" y2="308.0" stroke="#222" stroke-width="1.6"/>
+<line x1="909.0" y1="315.0" x2="891.0" y2="315.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900.0" y1="657.0" x2="890.0" y2="672.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900.0" y1="657.0" x2="910.0" y2="672.0" stroke="#222" stroke-width="1.6"/>
+<line x1="900.0" y1="657.0" x2="900.0" y2="672.0" stroke="#222" stroke-width="1.6"/>
+<circle cx="900.0" cy="650.0" r="5.5" fill="#fff" stroke="#222" stroke-width="1.6"/>
+<polygon points="900,453 975,485 900,517 825,485" fill="#5b8def" stroke="#2f5fb8" stroke-width="1.4"/>
+<text x="900" y="490" font-size="14" text-anchor="middle" fill="#0f1b33">Memiliki</text>
+<line x1="947.3" y1="297.4" x2="935.8" y2="311.3" stroke="#222" stroke-width="1.6"/>
+<line x1="952.7" y1="301.9" x2="941.2" y2="315.8" stroke="#222" stroke-width="1.6"/>
+<line x1="1374.6" y1="662.4" x2="1379.8" y2="679.7" stroke="#222" stroke-width="1.6"/>
+<line x1="1374.6" y1="662.4" x2="1392.5" y2="664.3" stroke="#222" stroke-width="1.6"/>
+<line x1="1374.6" y1="662.4" x2="1386.1" y2="672.0" stroke="#222" stroke-width="1.6"/>
+<circle cx="1369.2" cy="658.0" r="5.5" fill="#fff" stroke="#222" stroke-width="1.6"/>
+<polygon points="1160,453 1235,485 1160,517 1085,485" fill="#5b8def" stroke="#2f5fb8" stroke-width="1.4"/>
+<text x="1160" y="490" font-size="14" text-anchor="middle" fill="#0f1b33">Melakukan</text>
+<line x1="389.0" y1="738.0" x2="371.0" y2="738.0" stroke="#222" stroke-width="1.6"/>
+<line x1="389.0" y1="745.0" x2="371.0" y2="745.0" stroke="#222" stroke-width="1.6"/>
+<line x1="380.0" y1="1107.0" x2="370.0" y2="1122.0" stroke="#222" stroke-width="1.6"/>
+<line x1="380.0" y1="1107.0" x2="390.0" y2="1122.0" stroke="#222" stroke-width="1.6"/>
+<line x1="380.0" y1="1107.0" x2="380.0" y2="1122.0" stroke="#222" stroke-width="1.6"/>
+<circle cx="380.0" cy="1100.0" r="5.5" fill="#fff" stroke="#222" stroke-width="1.6"/>
+<polygon points="380,893 455,925 380,957 305,925" fill="#5b8def" stroke="#2f5fb8" stroke-width="1.4"/>
+<text x="380" y="930" font-size="14" text-anchor="middle" fill="#0f1b33">Memiliki</text>
+<line x1="1411.0" y1="1112.0" x2="1429.0" y2="1112.0" stroke="#222" stroke-width="1.6"/>
+<line x1="1411.0" y1="1105.0" x2="1429.0" y2="1105.0" stroke="#222" stroke-width="1.6"/>
+<line x1="1420.0" y1="743.0" x2="1430.0" y2="728.0" stroke="#222" stroke-width="1.6"/>
+<line x1="1420.0" y1="743.0" x2="1410.0" y2="728.0" stroke="#222" stroke-width="1.6"/>
+<line x1="1420.0" y1="743.0" x2="1420.0" y2="728.0" stroke="#222" stroke-width="1.6"/>
+<circle cx="1420.0" cy="750.0" r="5.5" fill="#fff" stroke="#222" stroke-width="1.6"/>
+<polygon points="1420,893 1495,925 1420,957 1345,925" fill="#5b8def" stroke="#2f5fb8" stroke-width="1.4"/>
+<text x="1420" y="930" font-size="14" text-anchor="middle" fill="#0f1b33">Digunakan</text>
+<rect x="815" y="242" width="170" height="56" fill="#66e095" stroke="#2e8b57" stroke-width="1.6"/>
+<text x="900" y="275.5" font-size="16" font-weight="600" text-anchor="middle" fill="#0d2b18">Users</text>
+<rect x="295" y="672" width="170" height="56" fill="#66e095" stroke="#2e8b57" stroke-width="1.6"/>
+<text x="380" y="705.5" font-size="16" font-weight="600" text-anchor="middle" fill="#0d2b18">Food Logs</text>
+<rect x="1335" y="672" width="170" height="56" fill="#66e095" stroke="#2e8b57" stroke-width="1.6"/>
+<text x="1420" y="705.5" font-size="16" font-weight="600" text-anchor="middle" fill="#0d2b18">Exercise Logs</text>
+<rect x="815" y="672" width="170" height="56" fill="#66e095" stroke="#2e8b57" stroke-width="1.6"/>
+<text x="900" y="705.5" font-size="16" font-weight="600" text-anchor="middle" fill="#0d2b18">Health Scores</text>
+<rect x="295" y="1122" width="170" height="56" fill="#66e095" stroke="#2e8b57" stroke-width="1.6"/>
+<text x="380" y="1155.5" font-size="16" font-weight="600" text-anchor="middle" fill="#0d2b18">Food Photos</text>
+<rect x="1335" y="1122" width="170" height="56" fill="#66e095" stroke="#2e8b57" stroke-width="1.6"/>
+<text x="1420" y="1155.5" font-size="16" font-weight="600" text-anchor="middle" fill="#0d2b18">Locations</text>
+</g>
+</svg>
