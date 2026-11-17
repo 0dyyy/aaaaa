@@ -6,16 +6,16 @@
     <title>ASVIS - Food Tracker</title>
     <link rel="stylesheet" href="{{ asset('style/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-    <!-- NAVBAR (Assuming standard layout) -->
     <nav id="navbar">
         <a href="{{ url('/') }}" class="logo">ASVIS</a>
         <ul class="nav-links">
             <li><a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a></li>
             <li><a href="{{ route('food-logs.index') }}" class="{{ request()->routeIs('food-logs.index') ? 'active' : '' }}">Food Tracker</a></li>
-            <li><a href="#">Exercise</a></li>
+            <li><a href="{{ route('exercise-logs.index') }}" class="{{ request()->routeIs('exercise-logs.index') ? 'active' : '' }}">Exercise</a></li>
             <li><a href="{{ route('health-scores.index') }}" class="{{ request()->routeIs('health-scores.index') ? 'active' : '' }}">Summary</a></li>
             
             @auth
@@ -26,7 +26,6 @@
         </ul>
         <div class="user-profile">
             @auth
-                {{-- Jika user sudah login --}}
                 <div class="user-info">
                     <div class="user-name">{{ Auth::user()->name }}</div>
                     <div class="user-role">{{ ucfirst(Auth::user()->role) }}</div>
@@ -38,38 +37,42 @@
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </form>
-            @else
-                {{-- Jika user belum login (Guest) --}}
-                <div class="user-info">
-                    <a href="{{ route('login') }}" style="margin-right: 15px; text-decoration: none; color: #333;">Login</a>
-                    <a href="{{ route('register') }}" style="text-decoration: none; color: #333; font-weight: bold;">Register</a>
-                </div>
             @endauth
         </div>
     </nav>
 
+    @php
+        $today = now()->toDateString();
+        
+        // Group ALL logs by date for the calendar and modal
+        $logsByDate = $foodLogs->groupBy(function($log) {
+            return \Carbon\Carbon::parse($log->consumed_at)->format('Y-m-d');
+        });
+
+        $todayLogs = $foodLogs->filter(fn($log) => \Carbon\Carbon::parse($log->consumed_at)->toDateString() === $today);
+        
+        $totalCals = $todayLogs->sum('calories');
+        $totalProtein = $todayLogs->sum(fn($log) => $log->nutrition_details['protein_g'] ?? 0);
+        $totalCarbs = $todayLogs->sum(fn($log) => $log->nutrition_details['carbs_g'] ?? 0);
+        $totalFat = $todayLogs->sum(fn($log) => $log->nutrition_details['fat_g'] ?? 0);
+        $totalEntries = $todayLogs->count();
+    @endphp
+
     <!-- HERO SECTION -->
     <section class="tracker-hero">
-        <!-- Left: Chart -->
         <div class="hero-left">
             <div class="chart-placeholder">
                 <div class="chart-label">
                     <small>Daily intakes</small>
                     <h3>FOOD</h3>
                 </div>
-                <!-- SVG mimicking the green circular chart in mockup -->
-                <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
-                    <path d="M 50 10 A 40 40 0 1 1 15 70" fill="none" stroke="#87c700" stroke-width="12" stroke-linecap="round"/>
-                    <circle cx="50" cy="50" r="10" fill="none" stroke="#87c700" stroke-width="8"/>
-                    <line x1="56" y1="56" x2="80" y2="80" stroke="#87c700" stroke-width="12" stroke-linecap="round"/>
-                </svg>
+                <canvas id="foodDailyChart"></canvas>
             </div>
         </div>
 
-        <!-- Center: Greeting & Buttons -->
         <div class="hero-center">
-            <h1>Hi <em>User</em></h1>
-            <p>adadawdadawd</p>
+            <h1>Hi <em>{{ Auth::user()->name }}</em></h1>
+            <p>Hari ini kamu mencatat {{ $totalEntries }} makanan.</p>
             
             <div class="action-buttons">
                 <div class="action-btn-group">
@@ -81,34 +84,36 @@
                 <div class="action-btn-group">
                     <p>Add Entries</p>
                     <button class="btn-box" id="btn-open-add">
-                        <i class="fa-regular fa-comment-dots"></i>
+                        <i class="fa-solid fa-comment-dots"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Right: Stats -->
         <div class="hero-right">
             <div class="stats-card">
-                <h2>Stats</h2>
+                <h2>Stats Today</h2>
                 <ul class="stats-list">
-                    <li>a</li>
-                    <li>AA</li>
-                    <li>A</li>
-                    <li>A</li>
-                    <li>a</li>
-                    <li>A</li>
-                    <li>A</li>
-                    <li>AA</li>
-                    <li>A</li>
+                    <li>Total Kalori <span class="val">{{ $totalCals }} kcal</span></li>
+                    <li>Protein <span class="val">{{ $totalProtein }} g</span></li>
+                    <li>Karbohidrat <span class="val">{{ $totalCarbs }} g</span></li>
+                    <li>Lemak <span class="val">{{ $totalFat }} g</span></li>
                 </ul>
             </div>
         </div>
     </section>
 
+    <!-- SUCCESS MESSAGE -->
+    @if(session('success'))
+        <div style="background-color: var(--btn-green); color: var(--primary-brown); padding: 15px; text-align: center; font-weight: bold;">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <h2 class="page-title">FOOD TRACKER</h2>
 
-    <!-- CALENDAR STRIP (Bottom) -->
+    <!-- CALENDAR STRIP -->
+    @php $startOfWeek = now()->startOfWeek(); @endphp
     <div class="calendar-strip">
         <div class="cal-day-header">Mo</div>
         <div class="cal-day-header">Tu</div>
@@ -118,26 +123,29 @@
         <div class="cal-day-header">Sa</div>
         <div class="cal-day-header">Su</div>
 
-        <div class="cal-date">15</div>
-        <div class="cal-date">16</div>
-        <div class="cal-date active-day-start">17</div>
-        <div class="cal-date active-day-end">18</div>
-        <div class="cal-date">19</div>
-        <div class="cal-date">20</div>
-        <div class="cal-date">21</div>
+        @for($i = 0; $i < 7; $i++)
+            @php 
+                $date = $startOfWeek->copy()->addDays($i);
+                $dateString = $date->format('Y-m-d');
+                $isToday = $date->isToday();
+                $hasLogs = $logsByDate->has($dateString);
+            @endphp
+            <div class="cal-date {{ $hasLogs ? 'active-day-start cal-day-clickable' : '' }} {{ $isToday ? 'current-day' : '' }}" 
+                 @if($hasLogs) data-date="{{ $dateString }}" @endif>
+                {{ $date->format('d') }}
+            </div>
+        @endfor
     </div>
-
 
     <!-- OVERLAY 1: FULL CALENDAR -->
     <div class="overlay" id="overlay-calendar">
         <div class="modal-content">
             <div class="modal-nav">
-                <div class="modal-month">May 2023</div>
+                <div class="modal-month">{{ now()->format('F Y') }}</div>
                 <div class="close-modal" id="close-calendar">Tutup kalender</div>
             </div>
             
             <div class="full-calendar-grid">
-                <!-- Headers -->
                 <div class="full-cal-header">Mo</div>
                 <div class="full-cal-header">Tu</div>
                 <div class="full-cal-header">We</div>
@@ -146,50 +154,43 @@
                 <div class="full-cal-header">Sa</div>
                 <div class="full-cal-header">Su</div>
                 
-                <!-- Row 1 -->
-                <div class="full-cal-cell">1</div>
-                <div class="full-cal-cell">2</div>
-                <div class="full-cal-cell">3</div>
-                <div class="full-cal-cell">4</div>
-                <div class="full-cal-cell">5</div>
-                <div class="full-cal-cell">6</div>
-                <div class="full-cal-cell">7</div>
-                
-                <!-- Row 2 -->
-                <div class="full-cal-cell">8</div>
-                <div class="full-cal-cell">9</div>
-                <div class="full-cal-cell">10</div>
-                <div class="full-cal-cell">11</div>
-                <div class="full-cal-cell">12</div>
-                <div class="full-cal-cell">13</div>
-                <div class="full-cal-cell">14</div>
+                @php
+                    $firstDayOfMonth = now()->startOfMonth();
+                    $lastDayOfMonth = now()->endOfMonth();
+                    $startOffset = $firstDayOfMonth->dayOfWeekIso - 1; 
+                @endphp
 
-                <!-- Row 3 -->
-                <div class="full-cal-cell">15</div>
-                <div class="full-cal-cell">16</div>
-                <div class="full-cal-cell active-start">17</div>
-                <div class="full-cal-cell active-end">18</div>
-                <div class="full-cal-cell">19</div>
-                <div class="full-cal-cell">20</div>
-                <div class="full-cal-cell">21</div>
+                @for($i = 0; $i < $startOffset; $i++)
+                    <div class="full-cal-cell empty-month"></div>
+                @endfor
 
-                <!-- Row 4 -->
-                <div class="full-cal-cell">22</div>
-                <div class="full-cal-cell">23</div>
-                <div class="full-cal-cell">24</div>
-                <div class="full-cal-cell">25</div>
-                <div class="full-cal-cell">26</div>
-                <div class="full-cal-cell">27</div>
-                <div class="full-cal-cell">28</div>
+                @for($day = 1; $day <= $lastDayOfMonth->day; $day++)
+                    @php 
+                        $currentDate = $firstDayOfMonth->copy()->addDays($day - 1);
+                        $dateString = $currentDate->format('Y-m-d');
+                        $hasLogs = $logsByDate->has($dateString);
+                        $isToday = $currentDate->isToday();
+                    @endphp
+                    
+                    <div class="full-cal-cell {{ $hasLogs ? 'active-start cal-day-clickable' : '' }} {{ $isToday ? 'current-day' : '' }}" 
+                         @if($hasLogs) data-date="{{ $dateString }}" @endif>
+                        {{ $day }}
+                    </div>
+                @endfor
+            </div>
+        </div>
+    </div>
 
-                <!-- Row 5 -->
-                <div class="full-cal-cell">29</div>
-                <div class="full-cal-cell">30</div>
-                <div class="full-cal-cell">31</div>
-                <div class="full-cal-cell empty-month">1</div>
-                <div class="full-cal-cell empty-month">2</div>
-                <div class="full-cal-cell empty-month">3</div>
-                <div class="full-cal-cell empty-month">4</div>
+    <!-- OVERLAY 1.5: LOG DETAILS (Shows when clicking a green date) -->
+    <div class="overlay" id="overlay-details">
+        <div class="modal-content" style="max-width: 800px; background-color: var(--hero-bg);">
+            <div class="modal-nav">
+                <div class="modal-month" id="details-date-title" style="font-family: var(--font-serif); font-size: 2rem; color: var(--primary-brown);"></div>
+                <div class="close-modal" id="close-details"><i class="fa-solid fa-xmark"></i> Tutup</div>
+            </div>
+            
+            <div class="log-details-list" id="log-details-list">
+                <!-- Log cards will be injected here via JavaScript -->
             </div>
         </div>
     </div>
@@ -203,50 +204,36 @@
                 <div class="close-modal" id="close-add">Tutup</div>
             </div>
 
-            <!-- Original Form Route targeted -->
             <form action="{{ route('food-logs.store') }}" method="POST" enctype="multipart/form-data" id="food-upload-form">
                 @csrf
                 <div class="add-entry-layout">
-                    <!-- Left: Upload Box -->
                     <div class="upload-section" id="upload-trigger">
                         <div class="upload-placeholder" id="upload-placeholder">
                             <i class="fa-solid fa-cube"></i>
                         </div>
                         <img src="" alt="Preview" class="preview-image" id="preview-image">
-                        <div class="preview-text" id="preview-text">anggap aja<br>gambar<br>makanan</div>
                         
-                        <!-- Hidden Inputs -->
                         <input type="file" id="photo-upload" name="photo" accept="image/*" required>
-                        <!-- Fallback inputs for the original controller requirements -->
                         <input type="hidden" name="food_name" id="hidden_food_name" value="Food Image Upload">
                         <input type="hidden" name="consumed_at" id="hidden_consumed_at">
                     </div>
 
-                    <!-- Right: Info & Results -->
                     <div class="info-section">
                         <h2 class="info-title" id="info-title">Add The Image</h2>
                         
-                        <!-- Hidden until image is added -->
                         <div id="ai-results-container">
                             <h2 class="info-title" style="display:none;" id="entries-taker-title">Entries Taker</h2>
                             
                             <div class="ai-overview-card" id="ai-overview-card">
-                                <h3>AI Overview</h3>
-                                <ul class="stats-list" id="ai-stats-list">
-                                    <li>a</li>
-                                    <li>AA</li>
-                                    <li>A</li>
-                                    <li>A</li>
-                                    <li>a</li>
-                                    <li>A</li>
-                                    <li>A</li>
-                                    <li>AA</li>
-                                    <li>A</li>
+                                <h3>Ready to Analyze</h3>
+                                <ul class="stats-list">
+                                    <li style="text-align: center; color: white;">Gambar sudah dipilih.</li>
+                                    <li style="text-align: center; color: white;">Klik tombol centang di bawah ini untuk mengirim ke AI Gemini.</li>
                                 </ul>
                             </div>
 
                             <div class="action-icon-buttons" id="action-buttons">
-                                <button type="submit" class="icon-btn" title="Submit Entry"><i class="fa-solid fa-check"></i></button>
+                                <button type="submit" class="icon-btn" title="Submit & Analyze"><i class="fa-solid fa-check"></i></button>
                                 <button type="button" class="icon-btn" id="btn-retry" title="Retry Upload"><i class="fa-solid fa-rotate-left"></i></button>
                             </div>
                         </div>
@@ -256,40 +243,124 @@
         </div>
     </div>
 
+    <!-- Pass backend logs to JS safely -->
     <script>
-        // Set current time for hidden input required by original controller
+        const allFoodLogs = @json($logsByDate);
+        const csrfToken = '{{ csrf_token() }}';
+    </script>
+
+    <script>
         document.getElementById('hidden_consumed_at').value = new Date().toISOString().slice(0, 16);
 
-        // Overlay Logic
-        const btnCalendar = document.getElementById('btn-open-calendar');
-        const btnAdd = document.getElementById('btn-open-add');
-        const overlayCalendar = document.getElementById('overlay-calendar');
-        const overlayAdd = document.getElementById('overlay-add');
-        const closeCalendar = document.getElementById('close-calendar');
-        const closeAdd = document.getElementById('close-add');
-
-        btnCalendar.addEventListener('click', () => overlayCalendar.classList.add('active'));
-        closeCalendar.addEventListener('click', () => overlayCalendar.classList.remove('active'));
-
-        btnAdd.addEventListener('click', () => overlayAdd.classList.add('active'));
-        closeAdd.addEventListener('click', () => {
-            overlayAdd.classList.remove('active');
-            resetUploadState(); // Reset form when closed
+        // Chart.js Setup
+        const ctx = document.getElementById('foodDailyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Lemak', 'Protein', 'Karbohidrat'],
+                datasets: [{
+                    data: [{{ $totalFat }}, {{ $totalProtein }}, {{ $totalCarbs }}], 
+                    backgroundColor: ['#325c00', '#69a800', '#447500'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: { legend: { display: false } }
+            }
         });
 
-        // Close on clicking outside modal content
-        [overlayCalendar, overlayAdd].forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                if(e.target === overlay) overlay.classList.remove('active');
+        // Modal Elements
+        const overlayCalendar = document.getElementById('overlay-calendar');
+        const overlayAdd = document.getElementById('overlay-add');
+        const overlayDetails = document.getElementById('overlay-details');
+
+        // Open/Close Main Modals
+        document.getElementById('btn-open-calendar').addEventListener('click', () => overlayCalendar.classList.add('active'));
+        document.getElementById('close-calendar').addEventListener('click', () => overlayCalendar.classList.remove('active'));
+
+        document.getElementById('btn-open-add').addEventListener('click', () => overlayAdd.classList.add('active'));
+        document.getElementById('close-add').addEventListener('click', () => { overlayAdd.classList.remove('active'); resetUploadState(); });
+        
+        document.getElementById('close-details').addEventListener('click', () => overlayDetails.classList.remove('active'));
+
+        // Handle Clicking on a Green Date (Both in strip and full calendar)
+        document.querySelectorAll('.cal-day-clickable').forEach(cell => {
+            cell.addEventListener('click', function() {
+                const dateStr = this.getAttribute('data-date');
+                if (!dateStr || !allFoodLogs[dateStr]) return;
+
+                const logsForDay = allFoodLogs[dateStr];
+                
+                // Format Date for Title (e.g., "17 November 2026")
+                const dateObj = new Date(dateStr);
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                document.getElementById('details-date-title').innerText = dateObj.toLocaleDateString('id-ID', options);
+
+                const listContainer = document.getElementById('log-details-list');
+                listContainer.innerHTML = ''; // Clear previous
+
+                logsForDay.forEach(log => {
+                    // Safety checks for JSON data
+                    const p = log.nutrition_details?.protein_g ?? 0;
+                    const c = log.nutrition_details?.carbs_g ?? 0;
+                    const f = log.nutrition_details?.fat_g ?? 0;
+                    const comment = log.nutrition_details?.ai_comment ?? 'Tidak ada komentar AI.';
+                    
+                    // Determine image path (use first photo if exists, else placeholder)
+                    let imgPath = log.photos && log.photos.length > 0 
+                        ? `/storage/${log.photos[0].photo_path}` 
+                        : 'https://via.placeholder.com/80?text=No+Img';
+
+                    // Format Time
+                    const time = new Date(log.consumed_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+
+                    // Build HTML Card
+                    const cardHTML = `
+                        <div class="log-card">
+                            <div class="log-card-header">
+                                <div class="log-card-title">${log.food_name}</div>
+                                <div class="log-card-time"><i class="fa-regular fa-clock"></i> ${time}</div>
+                            </div>
+                            <div class="log-card-body">
+                                <img src="${imgPath}" class="log-card-image" alt="Food image">
+                                <div class="log-card-info">
+                                    <p><strong><i class="fa-solid fa-fire"></i> ${log.calories} kcal</strong></p>
+                                    <p><em>" ${comment} "</em></p>
+                                    <div class="log-card-macros">
+                                        <span>Protein: ${p}g</span>
+                                        <span>Karbo: ${c}g</span>
+                                        <span>Lemak: ${f}g</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <form action="/tracker-makanan/${log.id}" method="POST" onsubmit="return confirm('Hapus makanan ini?');">
+                                        <input type="hidden" name="_token" value="${csrfToken}">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn-delete-log"><i class="fa-solid fa-trash"></i> Hapus</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    listContainer.insertAdjacentHTML('beforeend', cardHTML);
+                });
+
+                // Hide full calendar if open, show details modal
+                overlayCalendar.classList.remove('active');
+                overlayDetails.classList.add('active');
             });
         });
 
-        // Upload Logic
+
+        // Upload UI Logic
         const uploadTrigger = document.getElementById('upload-trigger');
         const fileInput = document.getElementById('photo-upload');
         const placeholder = document.getElementById('upload-placeholder');
         const previewImage = document.getElementById('preview-image');
-        const previewText = document.getElementById('preview-text');
         
         const infoTitle = document.getElementById('info-title');
         const entriesTitle = document.getElementById('entries-taker-title');
@@ -297,41 +368,31 @@
         const actionBtns = document.getElementById('action-buttons');
         const btnRetry = document.getElementById('btn-retry');
 
-        // Click box to trigger file selection
-        uploadTrigger.addEventListener('click', () => {
-            if(!fileInput.value) fileInput.click();
-        });
+        uploadTrigger.addEventListener('click', () => { if(!fileInput.value) fileInput.click(); });
 
-        // Handle file selection
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    // Update visual state matching image_565889.png
                     placeholder.style.display = 'none';
-                    // Optional: You can display the actual image, or keep the mockup text
-                    // previewImage.src = e.target.result;
-                    // previewImage.style.display = 'block';
-                    previewText.style.display = 'block';
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
 
-                    // Update Right Side Info
                     infoTitle.style.display = 'none';
                     entriesTitle.style.display = 'inline-block';
                     aiCard.style.display = 'block';
                     actionBtns.style.display = 'flex';
                     
-                    // Set filename as the food name for the controller
                     document.getElementById('hidden_food_name').value = this.files[0].name;
                 }.bind(this);
                 reader.readAsDataURL(this.files[0]);
             }
         });
 
-        // Retry button
         btnRetry.addEventListener('click', (e) => {
-            e.stopPropagation(); // prevent clicking the upload box behind it
+            e.stopPropagation();
             resetUploadState();
-            fileInput.click(); // immediately open file selector again
+            fileInput.click();
         });
 
         function resetUploadState() {
@@ -339,8 +400,6 @@
             placeholder.style.display = 'block';
             previewImage.style.display = 'none';
             previewImage.src = '';
-            previewText.style.display = 'none';
-            
             infoTitle.style.display = 'inline-block';
             entriesTitle.style.display = 'none';
             aiCard.style.display = 'none';

@@ -475,7 +475,7 @@ main { padding: 5% 10%; }
     .large-suggestion p { max-width: 100%; }
 }
 
-/* Specific Styles for Food Tracker matching the mockups */
+
 .tracker-hero {
     display: flex;
     justify-content: space-between;
@@ -491,11 +491,14 @@ main { padding: 5% 10%; }
     align-items: center;
 }
 
-/* Chart Placeholder (matching image_565be9.png) */
+/* Chart Container */
 .chart-placeholder {
-    width: 300px;
-    height: 300px;
+    width: 350px;
+    height: 350px;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .chart-label {
@@ -505,9 +508,17 @@ main { padding: 5% 10%; }
     transform: translateX(-50%);
     text-align: center;
     font-family: var(--font-serif);
+    z-index: 10;
 }
 .chart-label small { font-size: 0.8rem; font-family: var(--font-sans); }
 .chart-label h3 { font-size: 2.5rem; margin-top: -5px; }
+
+#foodDailyChart {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute;
+    top: 20px;
+}
 
 /* User Greeting */
 .hero-center h1 {
@@ -526,8 +537,8 @@ main { padding: 5% 10%; }
 .action-btn-group p { font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; color: #333;}
 
 .btn-box {
-    background-color: var(--primary-brown);
-    color: var(--hero-bg);
+    background-color: #4a4238; 
+    color: #fff;
     width: 70px;
     height: 70px;
     border-radius: 12px;
@@ -539,16 +550,16 @@ main { padding: 5% 10%; }
     border: none;
     transition: transform 0.2s, background-color 0.2s;
 }
-.btn-box:hover { transform: scale(1.05); background-color: #3a332b; }
+.btn-box:hover { transform: scale(1.05); background-color: #312b24; }
 
 /* Stats Card */
 .stats-card {
-    background-color: var(--primary-brown);
-    color: var(--hero-bg);
+    background-color: #4a4238; 
+    color: #fff;
     padding: 30px 40px;
     border-radius: 15px;
     width: 100%;
-    max-width: 300px;
+    max-width: 350px;
 }
 .stats-card h2 {
     font-family: var(--font-serif);
@@ -559,8 +570,9 @@ main { padding: 5% 10%; }
     padding-bottom: 10px;
 }
 .stats-list { list-style: none; padding-left: 0; }
-.stats-list li { margin-bottom: 8px; font-size: 1rem; }
-.stats-list li::before { content: "• "; font-size: 1.2em; }
+.stats-list li { margin-bottom: 12px; font-size: 1rem; color: #ccc;}
+.stats-list li span.val { color: #fff; font-weight: bold; float: right; }
+.stats-list li::before { content: "• "; font-size: 1.2em; color: #888; }
 
 /* Title Area */
 .page-title {
@@ -586,17 +598,14 @@ main { padding: 5% 10%; }
 
 .cal-day-header { padding: 15px 0; font-weight: 600; font-size: 1.2rem; background-color: var(--hero-bg); border-bottom: 1px solid #dcd9d2;}
 .cal-date { padding: 20px 0; font-size: 1.5rem; background-color: var(--hero-bg); }
-
-/* Active day styling based on mockup */
 .cal-date.active-day-start { background-color: #557d00; color: white; }
 .cal-date.active-day-end { background-color: #446900; color: white; }
-
 
 /* OVERLAYS (Modals) */
 .overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(253, 250, 246, 0.95); /* matching --hero-bg */
+    background-color: rgba(253, 250, 246, 0.95); 
     z-index: 999;
     display: none;
     justify-content: center;
@@ -640,12 +649,24 @@ main { padding: 5% 10%; }
     font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
 }
+
+
+.cal-date.current-day, .full-cal-cell.current-day {
+    border: 3px solid var(--primary-brown);
+    font-weight: 900;
+}
+
+.cal-date.current-day.active-day-start, 
+.full-cal-cell.current-day.active-start {
+    border-color: #fff;
+}
+
 .full-cal-cell.empty-month { background-color: #f5f3f0; color: #ccc; cursor: default; }
 .full-cal-cell:not(.empty-month):hover { border-color: var(--primary-brown); }
 .full-cal-cell.active-start { background-color: #557d00; color: white; border-color: #557d00;}
 .full-cal-cell.active-end { background-color: #446900; color: white; border-color: #446900;}
-
 
 /* Add Entry Modal Layout */
 .add-entry-layout {
@@ -665,6 +686,7 @@ main { padding: 5% 10%; }
     align-items: center;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .upload-placeholder {
@@ -678,15 +700,6 @@ main { padding: 5% 10%; }
     height: 100%;
     object-fit: cover;
     display: none;
-}
-.preview-text {
-    display: none;
-    position: absolute;
-    text-align: center;
-    font-family: var(--font-serif);
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #000;
 }
 
 .info-section {
@@ -709,7 +722,7 @@ main { padding: 5% 10%; }
     border-radius: 15px;
     padding: 30px;
     min-height: 350px;
-    display: none; /* Hidden until image is selected */
+    display: none;
 }
 
 .ai-overview-card h3 {
@@ -721,7 +734,7 @@ main { padding: 5% 10%; }
 }
 
 .action-icon-buttons {
-    display: none; /* Hidden until image is selected */
+    display: none;
     gap: 15px;
     margin-top: 20px;
 }
@@ -745,5 +758,101 @@ main { padding: 5% 10%; }
     color: white;
 }
 
-/* Hidden file input */
 #photo-upload { display: none; }
+
+/* ========================================= */
+/* --- FOOD TRACKER LOG DETAILS --- */
+/* ========================================= */
+
+/* Container untuk list makanan di hari tersebut */
+.log-details-list {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Kartu masing-masing log makanan */
+.log-card {
+    background-color: white;
+    border: 2px solid #eae7e0;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.log-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eae7e0;
+    padding-bottom: 10px;
+}
+
+.log-card-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--primary-brown);
+    font-weight: bold;
+}
+
+.log-card-time {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.log-card-body {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.log-card-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+    background-color: #f5f3f0;
+}
+
+.log-card-info {
+    flex: 1;
+}
+
+.log-card-info p {
+    font-size: 0.9rem;
+    color: #444;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.log-card-macros {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--primary-brown);
+}
+
+.btn-delete-log {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    font-family: var(--font-sans);
+}
+
+.btn-delete-log:hover {
+    background-color: #cc0000;
+}

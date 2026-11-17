@@ -6,6 +6,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany; // 1. Tambahkan import HasMany ini
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -26,5 +27,19 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+    public function foodLogs(): HasMany
+    {
+        return $this->hasMany(FoodLog::class);
+    }
+
+    public function exerciseLogs(): HasMany
+    {
+        return $this->hasMany(ExerciseLog::class);
+    }
+
+    public function healthScores(): HasMany
+    {
+        return $this->hasMany(HealthScore::class);
     }
 }
