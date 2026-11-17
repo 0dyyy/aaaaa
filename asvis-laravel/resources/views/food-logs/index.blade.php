@@ -110,6 +110,18 @@
         </div>
     @endif
 
+    @if(session('warning'))
+        <div style="background:#ffb347;color:#4a4238;padding:15px;text-align:center;font-weight:bold;">
+            {{ session('warning') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div style="background:#ff4d4d;color:white;padding:15px;text-align:center;">
+            @foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach
+        </div>
+    @endif
+
     <h2 class="page-title">FOOD TRACKER</h2>
 
     <!-- CALENDAR STRIP -->
@@ -250,7 +262,9 @@
     </script>
 
     <script>
-        document.getElementById('hidden_consumed_at').value = new Date().toISOString().slice(0, 16);
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('hidden_consumed_at').value = now.toISOString().slice(0, 16);
 
         // Chart.js Setup
         const ctx = document.getElementById('foodDailyChart').getContext('2d');

@@ -100,9 +100,15 @@
             </div>
 
             <div class="feature-light-grid">
-                <div class="light-card"><i class="fa-solid fa-leaf"></i></div>
-                <div class="light-card"><i class="fa-solid fa-person-biking"></i></div>
-                <div class="light-card light-card-wide"><i class="fa-regular fa-comment-dots"></i></div>
+                <a href="{{ route('food-logs.index') }}" class="light-card" title="Food Tracker" aria-label="Food Tracker">
+                    <i class="fa-solid fa-leaf"></i>
+                </a>
+                <a href="{{ route('exercise-logs.index') }}" class="light-card" title="Exercise" aria-label="Exercise">
+                    <i class="fa-solid fa-person-biking"></i>
+                </a>
+                <a href="{{ route('health-scores.index') }}" class="light-card light-card-wide" title="Summary" aria-label="Summary">
+                    <i class="fa-regular fa-comment-dots"></i>
+                </a>
             </div>
         </section>
     </main>
