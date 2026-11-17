@@ -14,10 +14,10 @@
     <nav id="navbar">
         <a href="{{ url('/') }}" class="logo">ASVIS</a>
         <ul class="nav-links">
-            <li><a href="{{ url('/') }}" class="active">Home</a></li>
-            <li><a href="#">Food Tracker</a></li>
+            <li><a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a></li>
+            <li><a href="{{ route('food-logs.index') }}" class="{{ request()->routeIs('food-logs.index') ? 'active' : '' }}">Food Tracker</a></li>
             <li><a href="#">Exercise</a></li>
-            <li><a href="{{ route('health-scores.index') }}">Summary</a></li>
+            <li><a href="{{ route('health-scores.index') }}" class="{{ request()->routeIs('health-scores.index') ? 'active' : '' }}">Summary</a></li>
             
             @auth
                 @if(Auth::user()->isAdmin())
@@ -27,23 +27,22 @@
         </ul>
         <div class="user-profile">
             @auth
-                {{-- Jika user sudah login, tampilkan namanya --}}
+                {{-- Jika user sudah login --}}
                 <div class="user-info">
                     <div class="user-name">{{ Auth::user()->name }}</div>
                     <div class="user-role">{{ ucfirst(Auth::user()->role) }}</div>
                 </div>
                 
-                {{-- Tombol Logout --}}
                 <form method="POST" action="{{ route('logout') }}" style="margin-left: 15px;">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;">
+                    <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;" title="Logout">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </form>
             @else
-                {{-- Jika user belum login, tampilkan tombol Login & Register --}}
+                {{-- Jika user belum login (Guest) --}}
                 <div class="user-info">
-                    <a href="{{ route('login') }}" style="margin-right: 10px; text-decoration: none; color: #333;">Login</a>
+                    <a href="{{ route('login') }}" style="margin-right: 15px; text-decoration: none; color: #333;">Login</a>
                     <a href="{{ route('register') }}" style="text-decoration: none; color: #333; font-weight: bold;">Register</a>
                 </div>
             @endauth

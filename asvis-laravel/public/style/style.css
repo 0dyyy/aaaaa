@@ -474,3 +474,276 @@ main { padding: 5% 10%; }
     .main-score { font-size: 6rem; }
     .large-suggestion p { max-width: 100%; }
 }
+
+/* Specific Styles for Food Tracker matching the mockups */
+.tracker-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5% 10%;
+    background-color: var(--hero-bg);
+}
+
+.hero-left, .hero-center, .hero-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Chart Placeholder (matching image_565be9.png) */
+.chart-placeholder {
+    width: 300px;
+    height: 300px;
+    position: relative;
+}
+
+.chart-label {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-family: var(--font-serif);
+}
+.chart-label small { font-size: 0.8rem; font-family: var(--font-sans); }
+.chart-label h3 { font-size: 2.5rem; margin-top: -5px; }
+
+/* User Greeting */
+.hero-center h1 {
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
+    font-style: italic;
+    border-bottom: 2px solid #000;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+.hero-center p { font-size: 1.1rem; color: #555; margin-bottom: 30px;}
+
+/* Action Buttons */
+.action-buttons { display: flex; gap: 20px; }
+.action-btn-group { text-align: center; }
+.action-btn-group p { font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; color: #333;}
+
+.btn-box {
+    background-color: var(--primary-brown);
+    color: var(--hero-bg);
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s, background-color 0.2s;
+}
+.btn-box:hover { transform: scale(1.05); background-color: #3a332b; }
+
+/* Stats Card */
+.stats-card {
+    background-color: var(--primary-brown);
+    color: var(--hero-bg);
+    padding: 30px 40px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 300px;
+}
+.stats-card h2 {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 10px;
+}
+.stats-list { list-style: none; padding-left: 0; }
+.stats-list li { margin-bottom: 8px; font-size: 1rem; }
+.stats-list li::before { content: "• "; font-size: 1.2em; }
+
+/* Title Area */
+.page-title {
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: 4rem;
+    color: var(--primary-brown);
+    margin: 40px 0;
+}
+
+/* Calendar Strip (Bottom of page) */
+.calendar-strip {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    max-width: 900px;
+    margin: 0 auto 50px auto;
+    text-align: center;
+    background-color: #eae7e0;
+    border-top: 1px solid #dcd9d2;
+    border-bottom: 1px solid #dcd9d2;
+}
+
+.cal-day-header { padding: 15px 0; font-weight: 600; font-size: 1.2rem; background-color: var(--hero-bg); border-bottom: 1px solid #dcd9d2;}
+.cal-date { padding: 20px 0; font-size: 1.5rem; background-color: var(--hero-bg); }
+
+/* Active day styling based on mockup */
+.cal-date.active-day-start { background-color: #557d00; color: white; }
+.cal-date.active-day-end { background-color: #446900; color: white; }
+
+
+/* OVERLAYS (Modals) */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(253, 250, 246, 0.95); /* matching --hero-bg */
+    z-index: 999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.overlay.active { display: flex; }
+
+/* Shared Modal Content Layout */
+.modal-content {
+    width: 90%;
+    max-width: 1200px;
+    position: relative;
+}
+
+/* Top Navigation inside Modals */
+.modal-nav {
+    position: absolute;
+    top: -80px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-month { font-size: 1.2rem; font-weight: bold; }
+.close-modal { cursor: pointer; font-size: 1.2rem; font-weight: bold; }
+
+/* Full Calendar Grid */
+.full-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+    text-align: center;
+    margin-top: 20px;
+}
+.full-cal-header { font-size: 1.5rem; margin-bottom: 15px; }
+.full-cal-cell {
+    background-color: white;
+    border: 1px solid #eae7e0;
+    padding: 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.full-cal-cell.empty-month { background-color: #f5f3f0; color: #ccc; cursor: default; }
+.full-cal-cell:not(.empty-month):hover { border-color: var(--primary-brown); }
+.full-cal-cell.active-start { background-color: #557d00; color: white; border-color: #557d00;}
+.full-cal-cell.active-end { background-color: #446900; color: white; border-color: #446900;}
+
+
+/* Add Entry Modal Layout */
+.add-entry-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.upload-section {
+    border: 10px solid #557d00;
+    border-radius: 20px;
+    height: 500px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-placeholder {
+    text-align: center;
+    color: #ddd;
+}
+.upload-placeholder i { font-size: 8rem; }
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+.preview-text {
+    display: none;
+    position: absolute;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.info-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #000;
+    display: inline-block;
+    align-self: flex-start;
+}
+
+.ai-overview-card {
+    background-color: var(--primary-brown);
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    min-height: 350px;
+    display: none; /* Hidden until image is selected */
+}
+
+.ai-overview-card h3 {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.action-icon-buttons {
+    display: none; /* Hidden until image is selected */
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.icon-btn {
+    background: none;
+    border: 2px solid var(--primary-brown);
+    border-radius: 12px;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    color: var(--primary-brown);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+}
+.icon-btn:hover {
+    background-color: var(--primary-brown);
+    color: white;
+}
+
+/* Hidden file input */
+#photo-upload { display: none; }
