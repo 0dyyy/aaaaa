@@ -5,7 +5,7 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("Update your account's profile information, email address, and body metrics.") }}
         </p>
     </header>
 
@@ -45,6 +45,20 @@
                     @endif
                 </div>
             @endif
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <x-input-label for="weight_kg" :value="__('Berat Badan (kg)')" />
+                <x-text-input id="weight_kg" name="weight_kg" type="number" step="0.1" min="20" max="300" class="mt-1 block w-full" :value="old('weight_kg', $user->weight_kg)" placeholder="Contoh: 65" />
+                <x-input-error class="mt-2" :messages="$errors->get('weight_kg')" />
+            </div>
+
+            <div>
+                <x-input-label for="height_cm" :value="__('Tinggi Badan (cm)')" />
+                <x-text-input id="height_cm" name="height_cm" type="number" step="0.1" min="50" max="250" class="mt-1 block w-full" :value="old('height_cm', $user->height_cm)" placeholder="Contoh: 170" />
+                <x-input-error class="mt-2" :messages="$errors->get('height_cm')" />
+            </div>
         </div>
 
         <div class="flex items-center gap-4">

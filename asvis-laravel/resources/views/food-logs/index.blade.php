@@ -10,36 +10,7 @@
 </head>
 <body>
 
-    <nav id="navbar">
-        <a href="{{ url('/') }}" class="logo">ASVIS</a>
-        <ul class="nav-links">
-            <li><a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a></li>
-            <li><a href="{{ route('food-logs.index') }}" class="{{ request()->routeIs('food-logs.index') ? 'active' : '' }}">Food Tracker</a></li>
-            <li><a href="{{ route('exercise-logs.index') }}" class="{{ request()->routeIs('exercise-logs.index') ? 'active' : '' }}">Exercise</a></li>
-            <li><a href="{{ route('health-scores.index') }}" class="{{ request()->routeIs('health-scores.index') ? 'active' : '' }}">Summary</a></li>
-            
-            @auth
-                @if(Auth::user()->isAdmin())
-                    <li><a href="{{ route('admin.dashboard') }}" style="color: #ff9900;">Admin Dashboard</a></li>
-                @endif
-            @endauth
-        </ul>
-        <div class="user-profile">
-            @auth
-                <div class="user-info">
-                    <div class="user-name">{{ Auth::user()->name }}</div>
-                    <div class="user-role">{{ ucfirst(Auth::user()->role) }}</div>
-                </div>
-                
-                <form method="POST" action="{{ route('logout') }}" style="margin-left: 15px;">
-                    @csrf
-                    <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;" title="Logout">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </form>
-            @endauth
-        </div>
-    </nav>
+    <x-navbar />
 
     @php
         $today = now()->toDateString();
@@ -207,7 +178,6 @@
         </div>
     </div>
 
-
     <!-- OVERLAY 2: ADD ENTRY -->
     <div class="overlay" id="overlay-add">
         <div class="modal-content">
@@ -222,31 +192,42 @@
                     <div class="upload-section" id="upload-trigger">
                         <div class="upload-placeholder" id="upload-placeholder">
                             <i class="fa-solid fa-cube"></i>
+                            <p style="margin-top: 10px; font-size: 1rem; color: #888;">Klik untuk unggah foto (opsional)</p>
                         </div>
                         <img src="" alt="Preview" class="preview-image" id="preview-image">
                         
-                        <input type="file" id="photo-upload" name="photo" accept="image/*" required>
-                        <input type="hidden" name="food_name" id="hidden_food_name" value="Food Image Upload">
+                        <input type="file" id="photo-upload" name="photo" accept="image/*">
                         <input type="hidden" name="consumed_at" id="hidden_consumed_at">
                     </div>
 
                     <div class="info-section">
-                        <h2 class="info-title" id="info-title">Add The Image</h2>
+                        <h2 class="info-title" id="info-title">Catat Makanan</h2>
                         
+                        <div style="margin-bottom: 20px; width: 100%;">
+                            <label for="food_name_input" style="display: block; font-weight: bold; margin-bottom: 8px; color: var(--primary-brown);">
+                                Nama / Deskripsi Makanan
+                            </label>
+                            <input
+                                type="text"
+                                id="food_name_input"
+                                name="food_name"
+                                placeholder="Contoh: Nasi goreng ayam + telur dadar (kosongkan jika hanya foto)"
+                                style="width: 100%; padding: 12px 15px; border: 2px solid var(--primary-brown); border-radius: 10px; font-family: var(--font-sans); font-size: 1rem;"
+                            >
+                        </div>
+
                         <div id="ai-results-container">
-                            <h2 class="info-title" style="display:none;" id="entries-taker-title">Entries Taker</h2>
-                            
-                            <div class="ai-overview-card" id="ai-overview-card">
+                            <div class="ai-overview-card" id="ai-overview-card" style="display: block; min-height: auto;">
                                 <h3>Ready to Analyze</h3>
                                 <ul class="stats-list">
-                                    <li style="text-align: center; color: white;">Gambar sudah dipilih.</li>
+                                    <li style="text-align: center; color: white;">Isi deskripsi makanan, unggah foto, atau keduanya.</li>
                                     <li style="text-align: center; color: white;">Klik tombol centang di bawah ini untuk mengirim ke AI Gemini.</li>
                                 </ul>
                             </div>
 
-                            <div class="action-icon-buttons" id="action-buttons">
+                            <div class="action-icon-buttons" id="action-buttons" style="display: flex;">
                                 <button type="submit" class="icon-btn" title="Submit & Analyze"><i class="fa-solid fa-check"></i></button>
-                                <button type="button" class="icon-btn" id="btn-retry" title="Retry Upload"><i class="fa-solid fa-rotate-left"></i></button>
+                                <button type="button" class="icon-btn" id="btn-retry" title="Reset Form"><i class="fa-solid fa-rotate-left"></i></button>
                             </div>
                         </div>
                     </div>
@@ -369,17 +350,12 @@
             });
         });
 
-
         // Upload UI Logic
         const uploadTrigger = document.getElementById('upload-trigger');
         const fileInput = document.getElementById('photo-upload');
         const placeholder = document.getElementById('upload-placeholder');
         const previewImage = document.getElementById('preview-image');
-        
-        const infoTitle = document.getElementById('info-title');
-        const entriesTitle = document.getElementById('entries-taker-title');
-        const aiCard = document.getElementById('ai-overview-card');
-        const actionBtns = document.getElementById('action-buttons');
+        const foodNameInput = document.getElementById('food_name_input');
         const btnRetry = document.getElementById('btn-retry');
 
         uploadTrigger.addEventListener('click', () => { if(!fileInput.value) fileInput.click(); });
@@ -391,13 +367,6 @@
                     placeholder.style.display = 'none';
                     previewImage.src = e.target.result;
                     previewImage.style.display = 'block';
-
-                    infoTitle.style.display = 'none';
-                    entriesTitle.style.display = 'inline-block';
-                    aiCard.style.display = 'block';
-                    actionBtns.style.display = 'flex';
-                    
-                    document.getElementById('hidden_food_name').value = this.files[0].name;
                 }.bind(this);
                 reader.readAsDataURL(this.files[0]);
             }
@@ -406,18 +375,14 @@
         btnRetry.addEventListener('click', (e) => {
             e.stopPropagation();
             resetUploadState();
-            fileInput.click();
         });
 
         function resetUploadState() {
             fileInput.value = '';
+            foodNameInput.value = '';
             placeholder.style.display = 'block';
             previewImage.style.display = 'none';
             previewImage.src = '';
-            infoTitle.style.display = 'inline-block';
-            entriesTitle.style.display = 'none';
-            aiCard.style.display = 'none';
-            actionBtns.style.display = 'none';
         }
     </script>
 </body>

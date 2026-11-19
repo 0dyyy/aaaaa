@@ -12,41 +12,7 @@
 </head>
 <body>
 
-    <nav id="navbar">
-        <a href="{{ url('/') }}" class="logo">ASVIS</a>
-        <ul class="nav-links">
-            <li><a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a></li>
-            <li><a href="{{ route('food-logs.index') }}" class="{{ request()->routeIs('food-logs.index') ? 'active' : '' }}">Food Tracker</a></li>
-            <li><a href="#">Exercise</a></li>
-            <li><a href="{{ route('health-scores.index') }}" class="{{ request()->routeIs('health-scores.index') ? 'active' : '' }}">Summary</a></li>
-
-            @auth
-                @if(Auth::user()->isAdmin())
-                    <li><a href="{{ route('admin.dashboard') }}" style="color: #ff9900;">Admin Dashboard</a></li>
-                @endif
-            @endauth
-        </ul>
-        <div class="user-profile">
-            @auth
-                <div class="user-info">
-                    <div class="user-name">{{ Auth::user()->name }}</div>
-                    <div class="user-role">{{ ucfirst(Auth::user()->role) }}</div>
-                </div>
-
-                <form method="POST" action="{{ route('logout') }}" style="margin-left: 15px;">
-                    @csrf
-                    <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;" title="Logout">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </form>
-            @else
-                <div class="user-info">
-                    <a href="{{ route('login') }}" style="margin-right: 15px; text-decoration: none; color: #333;">Login</a>
-                    <a href="{{ route('register') }}" style="text-decoration: none; color: #333; font-weight: bold;">Register</a>
-                </div>
-            @endauth
-        </div>
-    </nav>
+    <x-navbar />
 
     @php
         $hasMacros = array_sum($summary['macros']) > 0;

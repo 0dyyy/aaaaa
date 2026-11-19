@@ -7,36 +7,39 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class FoodLogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $foodLogs = Auth::user()->foodLogs()
             ->with('photos')
             ->orderBy('consumed_at', 'desc')
             ->get();
 
+        if ($request->wantsJson()) {
+            return $this->success('Data log makanan berhasil diambil', $foodLogs);
+        }
+
         return view('food-logs.index', compact('foodLogs'));
     }
 
     public function store(Request $request)
     {
-        // FIX 1: bigger size limit (10 MB) and WebP allowed
         $request->validate([
-            'food_name' => 'required|string|max:255',
+            'food_name' => 'nullable|required_without:photo|string|max:255',
             'consumed_at' => 'required|date',
             'location_name' => 'nullable|string|max:255',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'photo' => 'nullable|required_without:food_name|image|mimes:jpeg,png,jpg,webp|max:10240',
         ]);
 
-        // FIX 2 + 3: model and key come from config (config/services.php), not env()
         $geminiKey = config('services.gemini.key');
-        $geminiModel = config('services.gemini.model');
+        $geminiModel = config('services.gemini.model', 'gemini-2.5-flash');
 
-        // Default data if the AI call fails
+        $foodName = trim((string) $request->food_name);
         $calories = 0;
         $nutritionDetails = [
             'protein_g' => 0,
@@ -46,13 +49,16 @@ class FoodLogController extends Controller
         ];
         $aiFailed = true;
 
+        $promptText = $foodName !== ''
+            ? "Analyze this food: '{$foodName}'."
+            : "Identify the food in this image and analyze its nutrition.";
+
         $parts = [
             [
-                'text' => "Analyze this food: '{$request->food_name}'. Provide an estimated total calorie count and macronutrients in grams. Return ONLY a JSON object with this exact structure: {\"calories\": integer, \"protein_g\": integer, \"carbs_g\": integer, \"fat_g\": integer, \"ai_comment\": \"A short 1-sentence health insight in Indonesian\"}"
+                'text' => $promptText . ' Provide an estimated total calorie count and macronutrients in grams. Return ONLY a JSON object with this exact structure: {"food_name": "Short dish name in Indonesian", "calories": integer, "protein_g": integer, "carbs_g": integer, "fat_g": integer, "ai_comment": "A short 1-sentence health insight in Indonesian"}'
             ]
         ];
 
-        // Photo upload + base64 for Gemini
         $photoPath = null;
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
@@ -66,7 +72,6 @@ class FoodLogController extends Controller
             ];
         }
 
-        // FIX 4: the API call can never crash the request anymore
         if ($geminiKey) {
             try {
                 $response = Http::timeout(20)->retry(3, 2000, throw: false)
@@ -85,11 +90,14 @@ class FoodLogController extends Controller
                     $aiData = $content ? json_decode($content, true) : null;
 
                     if (is_array($aiData)) {
+                        if ($foodName === '' && ! empty($aiData['food_name'])) {
+                            $foodName = $aiData['food_name'];
+                        }
                         $calories = (int) ($aiData['calories'] ?? 0);
                         $nutritionDetails = [
-                            'protein_g' => $aiData['protein_g'] ?? 0,
-                            'carbs_g' => $aiData['carbs_g'] ?? 0,
-                            'fat_g' => $aiData['fat_g'] ?? 0,
+                            'protein_g' => (int) ($aiData['protein_g'] ?? 0),
+                            'carbs_g' => (int) ($aiData['carbs_g'] ?? 0),
+                            'fat_g' => (int) ($aiData['fat_g'] ?? 0),
                             'ai_comment' => $aiData['ai_comment'] ?? 'Data nutrisi berhasil diproses.',
                         ];
                         $aiFailed = false;
@@ -110,9 +118,8 @@ class FoodLogController extends Controller
             Log::warning('GEMINI_API_KEY is not set, skipping AI analysis.');
         }
 
-        // Save to database
         $foodLog = Auth::user()->foodLogs()->create([
-            'food_name' => $request->food_name,
+            'food_name' => $foodName !== '' ? $foodName : 'Makanan Tercatat',
             'calories' => $calories,
             'nutrition_details' => $nutritionDetails,
             'location_name' => $request->location_name,
@@ -127,20 +134,66 @@ class FoodLogController extends Controller
             ]);
         }
 
-        $redirect = redirect()->route('food-logs.index');
+        $message = $aiFailed
+            ? 'Makanan tersimpan, tetapi analisis AI gagal sehingga kalori diset 0.'
+            : 'Makanan berhasil dicatat dan dianalisis oleh AI!';
 
-        return $aiFailed
-            ? $redirect->with('warning', 'Makanan tersimpan, tetapi analisis AI gagal sehingga kalori diset 0.')
-            : $redirect->with('success', 'Makanan berhasil dicatat dan dianalisis oleh AI!');
+        if ($request->wantsJson()) {
+            return $this->success($message, $foodLog->load('photos'), 201);
+        }
+
+        return redirect()->route('food-logs.index')->with($aiFailed ? 'warning' : 'success', $message);
     }
 
-    public function destroy(FoodLog $foodLog)
+    public function show(Request $request, FoodLog $foodLog)
     {
         if ($foodLog->user_id !== Auth::id()) {
             abort(403);
         }
 
+        if ($request->wantsJson()) {
+            return $this->success('Data log makanan ditemukan', $foodLog->load('photos'));
+        }
+
+        return redirect()->route('food-logs.index');
+    }
+
+    public function update(Request $request, FoodLog $foodLog)
+    {
+        if ($foodLog->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'food_name' => 'sometimes|required|string|max:255',
+            'calories' => 'sometimes|nullable|integer|min:0',
+            'consumed_at' => 'sometimes|required|date',
+        ]);
+
+        $foodLog->update($data);
+
+        if ($request->wantsJson()) {
+            return $this->success('Log makanan berhasil diperbarui.', $foodLog->fresh('photos'));
+        }
+
+        return redirect()->route('food-logs.index')->with('success', 'Log makanan berhasil diperbarui.');
+    }
+
+    public function destroy(Request $request, FoodLog $foodLog)
+    {
+        if ($foodLog->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        foreach ($foodLog->photos as $photo) {
+            Storage::disk('public')->delete($photo->photo_path);
+        }
+
         $foodLog->delete();
+
+        if ($request->wantsJson()) {
+            return $this->success('Log makanan berhasil dihapus.');
+        }
 
         return redirect()->route('food-logs.index')->with('success', 'Log makanan berhasil dihapus.');
     }

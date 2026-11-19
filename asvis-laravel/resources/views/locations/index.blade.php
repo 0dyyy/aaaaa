@@ -6,8 +6,9 @@
     <title>ASVIS - Lokasi Olahraga</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('style/style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
-        #map { width: 100%; height: 420px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        #map { width: 100%; height: 420px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; z-index: 0; }
     </style>
 </head>
 <body>
@@ -131,41 +132,39 @@
             else { nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)'; }
         });
 
-        // Parse locations safely for Google Maps markers
+        // Data lokasi dari database
         const locations = @json($locations);
-
-        async function initMap() {
-            const { Map } = await google.maps.importLibrary('maps');
-            const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
-
-            const map = new Map(document.getElementById('map'), {
-                center: {lat: -6.2, lng: 106.816}, // Default to Jakarta
-                zoom: 12,
-                mapId : 'DEMO_MAP_ID', // Required for AdvancedMarkerElement
-            });
-
-            // Plot existing locations
-            locations.forEach(loc => {
-                if (loc.latitude && loc.longitude) {
-                    new AdvancedMarkerElement({
-                        map,
-                        position: {lat: parseFloat(loc.latitude), lng: parseFloat(loc.longitude)},
-                        title: loc.name
-                    });
-                }
-            });
-
-            // Handle clicking to add a new location
-            let picked = null;
-            map.addListener('click', (e) => {
-                document.getElementById('latitude').value = e.latLng.lat().toFixed(7);
-                document.getElementById('longitude').value = e.latLng.lng().toFixed(7);
-
-                if (picked) picked.map = null;
-                picked = new AdvancedMarkerElement({ map, position: e.latLng, title: 'Lokasi Baru'});
-            });
-        }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&loading=async&callback=initMap" async defer></script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. Buat peta, pusat awal di Jakarta
+        const map = L.map('map').setView([-6.2, 106.816], 12);
+
+        // 2. Ambil gambar peta dari OpenStreetMap (gratis, tanpa API key)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 3. Tampilkan marker untuk lokasi yang sudah tersimpan
+        locations.forEach(loc => {
+            if (loc.latitude && loc.longitude) {
+                L.marker([parseFloat(loc.latitude), parseFloat(loc.longitude)])
+                    .addTo(map)
+                    .bindPopup(`<b>${loc.name}</b><br>${loc.address ?? ''}`);
+            }
+        });
+
+        // 4. Klik peta untuk mengisi latitude & longitude di form
+        let picked = null;
+        map.on('click', (e) => {
+            document.getElementById('latitude').value = e.latlng.lat.toFixed(7);
+            document.getElementById('longitude').value = e.latlng.lng.toFixed(7);
+
+            if (picked) map.removeLayer(picked);
+            picked = L.marker(e.latlng).addTo(map).bindPopup('Lokasi Baru').openPopup();
+        });
+    </script>
 </body>
 </html>

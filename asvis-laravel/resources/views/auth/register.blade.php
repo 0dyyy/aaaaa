@@ -1,52 +1,99 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASVIS - Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('style/style.css') }}">
+</head>
+<body>
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+    <x-navbar />
+
+    <main class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-aside">
+                <div class="auth-aside-brand">
+                    <h2>ASVIS</h2>
+                    <p class="tagline">Alimentation Saine, Vie Saine</p>
+                    <p class="desc">
+                        Mulai perjalanan hidup sehatmu. Catat asupan makanan dengan AI, pantau kualitas udara saat berolahraga, dan raih skor kesehatan terbaikmu.
+                    </p>
+                </div>
+
+                <div class="auth-aside-badges">
+                    <div class="auth-aside-badge" title="Zero Hunger"><i class="fa-solid fa-bowl-food"></i></div>
+                    <div class="auth-aside-badge" title="Good Health"><i class="fa-solid fa-heart-pulse"></i></div>
+                    <div class="auth-aside-badge" title="Climate Action"><i class="fa-solid fa-earth-americas"></i></div>
+                </div>
+            </div>
+
+            <div class="auth-form-panel">
+                <h1>Create Account</h1>
+                <p class="subtitle">Lengkapi data diri di bawah ini untuk membuat akun ASVIS baru.</p>
+
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <div class="auth-field">
+                        <label for="name">Nama Lengkap</label>
+                        <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="Nama lengkapmu" required autofocus autocomplete="name">
+                        @error('name')
+                            <div class="auth-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="nama@email.com" required autocomplete="username">
+                        @error('email')
+                            <div class="auth-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="auth-field-row">
+                        <div class="auth-field">
+                            <label for="weight_kg">Berat Badan (kg) <small style="font-weight: normal; color: #888;">(Opsional)</small></label>
+                            <input id="weight_kg" type="number" step="0.1" min="20" max="300" name="weight_kg" value="{{ old('weight_kg') }}" placeholder="Contoh: 65">
+                            @error('weight_kg')
+                                <div class="auth-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="auth-field">
+                            <label for="height_cm">Tinggi Badan (cm) <small style="font-weight: normal; color: #888;">(Opsional)</small></label>
+                            <input id="height_cm" type="number" step="0.1" min="50" max="250" name="height_cm" value="{{ old('height_cm') }}" placeholder="Contoh: 170">
+                            @error('height_cm')
+                                <div class="auth-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="auth-field-row">
+                        <div class="auth-field">
+                            <label for="password">Password</label>
+                            <input id="password" type="password" name="password" placeholder="Min. 8 karakter" required autocomplete="new-password">
+                            @error('password')
+                                <div class="auth-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="auth-field">
+                            <label for="password_confirmation">Konfirmasi Password</label>
+                            <input id="password_confirmation" type="password" name="password_confirmation" placeholder="Ulangi password" required autocomplete="new-password">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="auth-submit-btn" style="margin-top: 8px;">Daftar Akun</button>
+                </form>
+
+                <div class="auth-switch">
+                    Sudah punya akun? <a href="{{ route('login') }}" class="auth-link">Masuk di sini</a>
+                </div>
+            </div>
         </div>
+    </main>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</body>
+</html>
